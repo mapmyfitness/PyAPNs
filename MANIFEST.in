@@ -1,0 +1,6 @@
+include apns.py
+include apns-send
+include setup.py
+include tests.py
+include README.markdown
+include RELEASE-VERSION

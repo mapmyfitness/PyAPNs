@@ -1,4 +1,16 @@
 from distutils.core import setup
+import sys
+
+version = "1.2.1"
+
+if 'sdist' in sys.argv:
+    import mmf_release_tools
+    version = mmf_release_tools.generate_release_version(version, __file__)
+    mmf_release_tools.write_release_version(version)
+else:
+    with open("RELEASE-VERSION", "r") as f:
+        version = f.readlines()[0].strip()
+
 
 setup(
     author = 'Simon Whitaker',
@@ -10,5 +22,5 @@ setup(
     py_modules = ['apns'],
     scripts = ['apns-send'],
     url = 'http://www.goosoftware.co.uk/',
-    version = '1.1.2',
+    version = version,
 )

@@ -1,4 +1,6 @@
 apns.py
+apns-send
 setup.py
 tests.py
 README.markdown
+RELEASE-VERSION
