@@ -184,7 +184,7 @@ class APNsConnection(object):
         self.connection_alive = False
 
     def __del__(self):
-        self._disconnect();
+        self._disconnect()
 
     def _connect(self):
         # Establish an SSL connection
@@ -202,21 +202,21 @@ class APNsConnection(object):
                 raise
 
         if self.enhanced:
-             self._socket.setblocking(False)
-             self._ssl = wrap_socket(self._socket, self.key_file, self.cert_file,
-                                         do_handshake_on_connect=False)
-             while True:
-                 try:
-                     self._ssl.do_handshake()
-                     self.connection_alive = True
-                     break
-                 except ssl.SSLError, err:
-                     if ssl.SSL_ERROR_WANT_READ == err.args[0]:
-                         select.select([self._ssl], [], [])
-                     elif ssl.SSL_ERROR_WANT_WRITE == err.args[0]:
-                         select.select([], [self._ssl], [])
-                     else:
-                         raise
+            self._socket.setblocking(False)
+            self._ssl = wrap_socket(self._socket, self.key_file, self.cert_file,
+                                    do_handshake_on_connect=False)
+            while True:
+                try:
+                    self._ssl.do_handshake()
+                    self.connection_alive = True
+                    break
+                except ssl.SSLError, err:
+                    if ssl.SSL_ERROR_WANT_READ == err.args[0]:
+                        select.select([self._ssl], [], [])
+                    elif ssl.SSL_ERROR_WANT_WRITE == err.args[0]:
+                        select.select([], [self._ssl], [])
+                    else:
+                        raise
         else:
             # Fallback for 'SSLError: _ssl.c:489: The handshake operation timed out'
             for i in xrange(3):
@@ -257,7 +257,7 @@ class APNsConnection(object):
             if len(wlist) > 0:
                 self._connection().sendall(string)
         else: # blocking socket
-             return self._connection().write(string)
+            return self._connection().write(string)
 
 
 class PayloadAlert(object):
@@ -284,10 +284,12 @@ class PayloadAlert(object):
             d['launch-image'] = self.launch_image
         return d
 
+
 class PayloadTooLargeError(Exception):
     def __init__(self, payload_size):
         super(PayloadTooLargeError, self).__init__()
         self.payload_size = payload_size
+
 
 class Payload(object):
     """A class representing an APNs message payload"""
@@ -321,12 +323,12 @@ class Payload(object):
         if self.content_available:
             d.update({'content-available': 1})
 
-        d = { 'aps': d }
+        d = {'aps': d}
         d.update(self.custom)
         return d
 
     def json(self):
-        return json.dumps(self.dict(), separators=(',',':'), ensure_ascii=False).encode('utf-8')
+        return json.dumps(self.dict(), separators=(',', ':'), ensure_ascii=False).encode('utf-8')
 
     def _check_size(self):
         payload_length = len(self.json())
@@ -337,6 +339,7 @@ class Payload(object):
         attrs = ("alert", "badge", "sound", "category", "custom")
         args = ", ".join(["%s=%r" % (n, getattr(self, n)) for n in attrs])
         return "%s(%s)" % (self.__class__.__name__, args)
+
 
 class Frame(object):
     """A class representing an APNs message frame for multiple sending"""
@@ -365,7 +368,7 @@ class Frame(object):
 
         identifier_bin = APNs.packed_uint_big_endian(identifier)
         identifier_length_bin = \
-                APNs.packed_ushort_big_endian(len(identifier_bin))
+            APNs.packed_ushort_big_endian(len(identifier_bin))
         identifier_item = '\3' + identifier_length_bin + identifier_bin
         self.frame_data.extend(identifier_item)
         item_len += len(identifier_item)
@@ -387,6 +390,7 @@ class Frame(object):
     def __str__(self):
         """Get the frame buffer"""
         return str(self.frame_data)
+
 
 class FeedbackConnection(APNsConnection):
     """
@@ -442,6 +446,7 @@ class FeedbackConnection(APNsConnection):
                     # some more data and append to buffer
                     break
 
+
 class GatewayConnection(APNsConnection):
     """
     A class that represents a connection to the APNs gateway server
@@ -482,15 +487,15 @@ class GatewayConnection(APNsConnection):
         return notification
 
     def _get_enhanced_notification(self, token_hex, payload, identifier, expiry):
-         """
-         form notification data in an enhanced format
-         """
-         token = a2b_hex(token_hex)
-         payload = payload.json()
-         fmt = ENHANCED_NOTIFICATION_FORMAT % len(payload)
-         notification = pack(fmt, ENHANCED_NOTIFICATION_COMMAND, identifier, expiry,
-                             TOKEN_LENGTH, token, len(payload), payload)
-         return notification
+        """
+        form notification data in an enhanced format
+        """
+        token = a2b_hex(token_hex)
+        payload = payload.json()
+        fmt = ENHANCED_NOTIFICATION_FORMAT % len(payload)
+        notification = pack(fmt, ENHANCED_NOTIFICATION_COMMAND, identifier, expiry,
+                            TOKEN_LENGTH, token, len(payload), payload)
+        return notification
          
     def send_notification(self, token_hex, payload, identifier=0, expiry=0):
         """
@@ -500,7 +505,7 @@ class GatewayConnection(APNsConnection):
             self._wait_resending(30)
             with self._send_lock:
                 message = self._get_enhanced_notification(token_hex, payload,
-                                                           identifier, expiry)
+                                                          identifier, expiry)
                 self._sent_notifications.append(dict({'id': identifier, 'message': message}))
                 try:
                     self.write(message)
@@ -582,6 +587,7 @@ class GatewayConnection(APNsConnection):
                 return
             time.sleep(DELAY_RESEND_SECS) #DEBUG
         self._is_resending = False
+
 
 class Util(object):
     @classmethod

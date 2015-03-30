@@ -16,6 +16,7 @@ mock_tokens = []
 for i in range(0, NUM_MOCK_TOKENS):
     mock_tokens.append(hashlib.sha256("%.12f" % random()).hexdigest())
 
+
 def mock_chunks_generator():
     BUF_SIZE = 64
     # Create fake data feed
