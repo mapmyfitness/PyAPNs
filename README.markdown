@@ -47,9 +47,12 @@ For more complicated alerts including custom buttons etc, use the PayloadAlert
 class. Example:
 
 ```python
-alert = PayloadAlert("Hello world!", action_loc_key="Click me")
+alert = PayloadAlert("Hello world!", action_loc_key="Click me", title="Example push")
 payload = Payload(alert=alert, sound="default")
 ```
+
+APNS specifies that if alert can be a string or a dict, and if the dict only contains the 'body' attribute, it should be a flat string instead.
+PayloadAlert maintains this behavior internally, so you can always use a PayloadAlert for the Payload alert.
 
 To send custom payload arguments, pass a dictionary to the custom kwarg
 of the Payload constructor.
