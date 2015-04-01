@@ -291,6 +291,11 @@ class PayloadAlert(object):
             d['title-loc-key'] = self.title_loc_key
         if self.title_loc_args:
             d['title-loc-args'] = self.title_loc_args
+
+        # If the only Alert property is body, return a simple string instead of dict,
+        # per https://developer.apple.com/library/ios/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/Chapters/ApplePushService.html
+        if 'body' in d and len(d.keys()) == 1:
+            return d['body']
         return d
 
 

@@ -111,11 +111,7 @@ class TestAPNs(unittest.TestCase):
     def testPayloadAlert(self):
         pa = PayloadAlert('foo')
         d = pa.dict()
-        self.assertEqual(d['body'], 'foo')
-        self.assertFalse('action-loc-key' in d)
-        self.assertFalse('loc-key' in d)
-        self.assertFalse('loc-args' in d)
-        self.assertFalse('launch-image' in d)
+        self.assertEqual(d, 'foo')
 
         pa = PayloadAlert('foo', action_loc_key='bar', loc_key='wibble',
             loc_args=['king','kong'], launch_image='wobble', title='A title', title_loc_key='a_title-loc-key', title_loc_args=['a', 'b'])
