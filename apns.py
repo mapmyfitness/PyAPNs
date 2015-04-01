@@ -262,13 +262,16 @@ class APNsConnection(object):
 
 class PayloadAlert(object):
     def __init__(self, body=None, action_loc_key=None, loc_key=None,
-                 loc_args=None, launch_image=None):
+                 loc_args=None, launch_image=None, title=None, title_loc_key=None, title_loc_args=None):
         super(PayloadAlert, self).__init__()
         self.body = body
         self.action_loc_key = action_loc_key
         self.loc_key = loc_key
         self.loc_args = loc_args
         self.launch_image = launch_image
+        self.title = title
+        self.title_loc_key = title_loc_key
+        self.title_loc_args = title_loc_args
 
     def dict(self):
         d = {}
@@ -282,6 +285,12 @@ class PayloadAlert(object):
             d['loc-args'] = self.loc_args
         if self.launch_image:
             d['launch-image'] = self.launch_image
+        if self.title:
+            d['title'] = self.title
+        if self.title_loc_key:
+            d['title-loc-key'] = self.title_loc_key
+        if self.title_loc_args:
+            d['title-loc-args'] = self.title_loc_args
         return d
 
 

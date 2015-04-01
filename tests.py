@@ -118,13 +118,16 @@ class TestAPNs(unittest.TestCase):
         self.assertFalse('launch-image' in d)
 
         pa = PayloadAlert('foo', action_loc_key='bar', loc_key='wibble',
-            loc_args=['king','kong'], launch_image='wobble')
+            loc_args=['king','kong'], launch_image='wobble', title='A title', title_loc_key='a_title-loc-key', title_loc_args=['a', 'b'])
         d = pa.dict()
         self.assertEqual(d['body'], 'foo')
         self.assertEqual(d['action-loc-key'], 'bar')
         self.assertEqual(d['loc-key'], 'wibble')
         self.assertEqual(d['loc-args'], ['king','kong'])
         self.assertEqual(d['launch-image'], 'wobble')
+        self.assertEqual(d['title'], 'A title')
+        self.assertEqual(d['title-loc-key'], 'a_title-loc-key')
+        self.assertEqual(d['title-loc-args'], ['a', 'b'])
 
         pa = PayloadAlert(loc_key='wibble')
         d = pa.dict()
